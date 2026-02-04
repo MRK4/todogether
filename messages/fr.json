@@ -21,7 +21,11 @@
       "inProgress": "En cours",
       "done": "Terminé"
     },
-    "empty": "Aucune tâche pour l'instant."
+    "empty": "Aucune tâche pour l'instant.",
+    "addColumn": "Ajouter une colonne",
+    "createColumnTitle": "Nouvelle colonne",
+    "columnTitleLabel": "Titre de la colonne",
+    "columnColorLabel": "Couleur de fond"
   },
   "Task": {
     "noTitle": "Sans titre",
@@ -46,6 +50,24 @@
     "create": "Créer",
     "cancel": "Annuler"
   },
+  "Auth": {
+    "login": "Connexion",
+    "signup": "Inscription",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "passwordConfirm": "Confirmer le mot de passe",
+    "name": "Nom",
+    "signIn": "Se connecter",
+    "signUp": "Créer un compte",
+    "signInWithGoogle": "Continuer avec Google",
+    "signInWithGitHub": "Continuer avec GitHub",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "invalidCredentials": "E-mail ou mot de passe incorrect.",
+    "emailAlreadyUsed": "Cet e-mail est déjà utilisé.",
+    "passwordsMismatch": "Les mots de passe ne correspondent pas.",
+    "signUpSuccess": "Compte créé. Connectez-vous."
+  },
   "User": {
     "guest": "Invité",
     "loginTitle": "Se connecter",
@@ -56,7 +78,17 @@
     "loginCta": "Se connecter",
     "logout": "Se déconnecter",
     "close": "Fermer",
-    "guestDescription": "Vous êtes actuellement connecté en tant qu'invité. Connectez-vous pour accéder à votre compte et sauvegarder vos tableaux."
+    "cancel": "Annuler",
+    "clearGuestData": "Effacer mes données",
+    "clearGuestDataDone": "Données effacées. Rechargement…",
+    "clearGuestDataConfirmTitle": "Effacer les données invité ?",
+    "clearGuestDataConfirmDescription": "Toutes les données stockées localement (tableaux, tâches, préférences, etc.) seront supprimées. La page sera rechargée.",
+    "clearGuestDataConfirm": "Effacer",
+    "guestDescription": "Vous êtes actuellement connecté en tant qu'invité. Créez un compte pour :",
+    "guestIncentive1": "Sauvegarder vos tableaux et y accéder partout",
+    "guestIncentive2": "Partager des tableaux et collaborer en temps réel",
+    "guestIncentive3": "Garder un historique de vos tâches et projets",
+    "guestIncentive4": "Synchroniser vos données sur tous vos appareils"
   }
 }
 

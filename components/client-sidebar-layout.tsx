@@ -1,9 +1,10 @@
- "use client";
- 
+"use client";
+
 import { useRef, useState } from "react";
 import { LayoutDashboard, Plus, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { signOut, useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { RabbitIcon, type RabbitIconHandle } from "@/components/ui/rabbit";
@@ -64,26 +65,30 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
   const locale = useLocale();
   const router = useRouter();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userDialogOpen, setUserDialogOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null
-  );
   const rabbitRef = useRef<RabbitIconHandle | null>(null);
   const { showAlert } = useAppAlert();
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated" && !!session?.user;
+  const user = session?.user
+    ? {
+        name: session.user.name ?? "",
+        email: session.user.email ?? "",
+      }
+    : null;
 
   const handleOpenUserDialog = () => {
     setUserDialogOpen(true);
   };
 
   const handleLogin = () => {
-    setIsAuthenticated(true);
-    setUser({ name: "Alice Martin", email: "alice@example.com" });
+    setUserDialogOpen(false);
+    router.push("/login");
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
+    setUserDialogOpen(false);
+    signOut({ callbackUrl: "/" });
   };
 
   const toggleLocale = () => {

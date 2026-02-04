@@ -1,105 +1,18 @@
-"use client";
+import { prisma } from "@/lib/prisma";
+import { getBoardWithColumnsAndTasks } from "@/lib/boards";
+import { BoardView } from "./board-view";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Plus } from "lucide-react";
-
-import { TaskCard, type Task } from "@/components/task-card";
-import { TaskDetailDialog } from "@/components/task-detail-dialog";
-import { TaskCreateDialog } from "@/components/task-create-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
-
-const EXAMPLE_TASKS: Task[] = [
-  {
-    id: "1",
-    title: "Réviser la doc i18n",
-    description:
-      "Vérifier que toutes les clés sont traduites dans messages/en.json et messages/fr.json.",
-    priority: "medium",
-    author: "Alice",
-    assignee: "Alice",
-    createdAt: "2025-02-01T10:00:00.000Z",
-    updatedAt: "2025-02-03T14:30:00.000Z",
-  },
-  {
-    id: "2",
-    title: "Tester le composant TaskCard",
-    priority: "low",
-    author: "Bob",
-    assignee: "Bob",
-    createdAt: "2025-02-02T09:00:00.000Z",
-    updatedAt: "2025-02-02T09:00:00.000Z",
-  },
-];
-
-export default function Home() {
-  const tBoard = useTranslations("Board");
-  const tTask = useTranslations("Task");
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const columnKeys: Array<"todo" | "inProgress" | "done"> = [
-    "todo",
-    "inProgress",
-    "done",
-  ];
-
-  return (
-    <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-stretch gap-4 overflow-x-auto pb-4">
-        {columnKeys.map((key) => (
-          <Card
-            key={key}
-            className="flex min-h-[280px] min-w-[260px] max-w-xs flex-1 flex-col"
-          >
-            <CardHeader className="flex flex-row items-center justify-between gap-2 pb-4">
-              <CardTitle className="text-sm font-semibold">
-                {tBoard(`columns.${key}`)}
-              </CardTitle>
-              <Button size="icon-xs" variant="ghost" className="shrink-0">
-                <Plus className="h-3 w-3" />
-                <span className="sr-only">{tBoard("empty")}</span>
-              </Button>
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-3">
-              {key === "todo" && EXAMPLE_TASKS.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {EXAMPLE_TASKS.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      onClick={setSelectedTask}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="border-dashed bg-muted/40 text-muted-foreground flex flex-1 items-center justify-center rounded-lg border text-xs">
-                  {tBoard("empty")}
-                </div>
-              )}
-              <button
-                type="button"
-                className="cursor-pointer border-dashed text-muted-foreground hover:bg-muted/60 flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors"
-                onClick={() => setIsCreateOpen(true)}
-              >
-                <Plus className="h-3 w-3" />
-                <span>{tTask("addTask")}</span>
-              </button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <TaskDetailDialog
-        task={selectedTask}
-        open={!!selectedTask}
-        onOpenChange={(open) => !open && setSelectedTask(null)}
-      />
-      <TaskCreateDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
-    </div>
-  );
+export default async function Page() {
+  let board = await prisma.board.findFirst({
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+  if (!board) {
+    board = await prisma.board.create({
+      data: { title: "Tableau principal" },
+      select: { id: true },
+    });
+  }
+  const boardData = await getBoardWithColumnsAndTasks(board.id);
+  return <BoardView boardId={board.id} board={boardData} />;
 }

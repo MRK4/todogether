@@ -41,6 +41,6 @@ Il peut alors **soit se connecter**, soit **continuer en tant qu’invité**, pu
 Une fois cette étape passée, il peut notamment :
 - **Créer des colonnes** (par exemple "À faire", "En cours", "Terminé").  
 - **Ajouter, modifier, déplacer et supprimer des tâches** dans chaque colonne.  
-- **Collaborer en temps réel** avec d’autres utilisateurs présents sur le même tableau.
+- **Collaborer en temps réel** avec d’autres utilisateurs présents sur le même tableau (requiert une authentification).
 
 L’objectif est de **rentrer tout de suite dans le vif du sujet** : pas de landing page, on se concentre directement sur le tableau et les tâches.

@@ -21,7 +21,11 @@
       "inProgress": "In progress",
       "done": "Done"
     },
-    "empty": "No tasks yet."
+    "empty": "No tasks yet.",
+    "addColumn": "Add column",
+    "createColumnTitle": "New column",
+    "columnTitleLabel": "Column title",
+    "columnColorLabel": "Background color"
   },
   "Task": {
     "noTitle": "Untitled",
@@ -46,6 +50,24 @@
     "create": "Create",
     "cancel": "Cancel"
   },
+  "Auth": {
+    "login": "Log in",
+    "signup": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "name": "Name",
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "signInWithGoogle": "Continue with Google",
+    "signInWithGitHub": "Continue with GitHub",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "invalidCredentials": "Invalid email or password.",
+    "emailAlreadyUsed": "This email is already in use.",
+    "passwordsMismatch": "Passwords do not match.",
+    "signUpSuccess": "Account created. Please sign in."
+  },
   "User": {
     "guest": "Guest",
     "loginTitle": "Sign in",
@@ -56,7 +78,17 @@
     "loginCta": "Sign in",
     "logout": "Log out",
     "close": "Close",
-    "guestDescription": "You are currently signed in as a guest. Sign in to access your account and save your boards."
+    "cancel": "Cancel",
+    "clearGuestData": "Clear my data",
+    "clearGuestDataDone": "Data cleared. Reloading…",
+    "clearGuestDataConfirmTitle": "Clear guest data?",
+    "clearGuestDataConfirmDescription": "All locally stored data (boards, tasks, preferences, etc.) will be removed. The page will reload.",
+    "clearGuestDataConfirm": "Clear",
+    "guestDescription": "You are currently signed in as a guest. Create an account to:",
+    "guestIncentive1": "Save your boards and access them anywhere",
+    "guestIncentive2": "Share boards and collaborate in real time",
+    "guestIncentive3": "Keep a history of your tasks and projects",
+    "guestIncentive4": "Sync your data across all your devices"
   }
 }
 

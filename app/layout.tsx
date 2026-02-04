@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientSidebarLayout from "@/components/client-sidebar-layout";
 import { AlertProvider } from "@/components/alert-provider";
+import { SessionProvider } from "@/components/session-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,9 +49,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AlertProvider>
-            <ClientSidebarLayout>{children}</ClientSidebarLayout>
-          </AlertProvider>
+          <SessionProvider>
+            <AlertProvider>
+              <ClientSidebarLayout>{children}</ClientSidebarLayout>
+            </AlertProvider>
+          </SessionProvider>
         </NextIntlClientProvider>
       </body>
     </html>
