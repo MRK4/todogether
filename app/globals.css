@@ -115,11 +115,24 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Hovers harmonisés à la couleur de la colonne (variables définies sur la Card) */
+.column-colored button:hover,
+.column-colored [data-slot="button"]:hover {
+  background-color: var(--column-hover) !important;
+}
+.column-colored button.border-dashed:hover {
+  background-color: var(--column-hover-subtle) !important;
+}
+.column-colored [data-slot="card"]:hover {
+  background-color: var(--column-hover-subtle) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
-    @apply bg-background text-foreground;
+    @apply h-full overflow-hidden bg-background text-foreground;
   }
 }

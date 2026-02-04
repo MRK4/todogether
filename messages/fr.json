@@ -25,7 +25,10 @@
     "addColumn": "Ajouter une colonne",
     "createColumnTitle": "Nouvelle colonne",
     "columnTitleLabel": "Titre de la colonne",
-    "columnColorLabel": "Couleur de fond"
+    "columnColorLabel": "Couleur de fond",
+    "editColumn": "Modifier la colonne",
+    "editColumnTitle": "Modifier la colonne",
+    "saveColumn": "Enregistrer"
   },
   "Task": {
     "noTitle": "Sans titre",

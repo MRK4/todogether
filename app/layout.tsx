@@ -44,17 +44,19 @@ export default async function RootLayout({
   const messages = await getMessages(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <SessionProvider>
-            <AlertProvider>
-              <ClientSidebarLayout>{children}</ClientSidebarLayout>
-            </AlertProvider>
-          </SessionProvider>
-        </NextIntlClientProvider>
+        <div className="h-full overflow-hidden">
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <SessionProvider>
+              <AlertProvider>
+                <ClientSidebarLayout>{children}</ClientSidebarLayout>
+              </AlertProvider>
+            </SessionProvider>
+          </NextIntlClientProvider>
+        </div>
       </body>
     </html>
   );

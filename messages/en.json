@@ -25,7 +25,10 @@
     "addColumn": "Add column",
     "createColumnTitle": "New column",
     "columnTitleLabel": "Column title",
-    "columnColorLabel": "Background color"
+    "columnColorLabel": "Background color",
+    "editColumn": "Edit column",
+    "editColumnTitle": "Edit column",
+    "saveColumn": "Save"
   },
   "Task": {
     "noTitle": "Untitled",

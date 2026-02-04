@@ -67,6 +67,56 @@ export async function createColumn(
   return { success: true, columnId: column.id };
 }
 
+const updateColumnSchema = z.object({
+  title: z.string().min(1, "Le titre est requis").max(100),
+  color: z.union([z.string().regex(/^#[0-9A-Fa-f]{6}$/), z.literal("")]).optional(),
+});
+
+export type UpdateColumnState =
+  | { success: true }
+  | { success: false; error: string; field?: string };
+
+export async function updateColumn(
+  columnId: string,
+  _prev: UpdateColumnState | null,
+  formData: FormData
+): Promise<UpdateColumnState> {
+  const raw = {
+    title: formData.get("title") ?? "",
+    color: (formData.get("color") as string) ?? undefined,
+  };
+
+  const parsed = updateColumnSchema.safeParse(raw);
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors;
+    const key = Object.keys(first)[0] as keyof typeof first;
+    const msg = Array.isArray(first[key]) ? first[key]?.[0] : first[key];
+    return { success: false, error: String(msg ?? "Validation error"), field: key };
+  }
+
+  const existing = await prisma.column.findUnique({
+    where: { id: columnId },
+    select: { id: true, boardId: true },
+  });
+  if (!existing) {
+    return { success: false, error: "Column not found" };
+  }
+
+  const color = parsed.data.color && parsed.data.color !== "" ? parsed.data.color : null;
+
+  await prisma.column.update({
+    where: { id: columnId },
+    data: {
+      title: parsed.data.title.trim(),
+      color,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath(`/boards/${existing.boardId}`);
+  return { success: true };
+}
+
 export async function getColumns(boardId: string) {
   return prisma.column.findMany({
     where: { boardId },

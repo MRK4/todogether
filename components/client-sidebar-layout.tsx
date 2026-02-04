@@ -102,8 +102,8 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
     : tUser("guest");
 
   return (
-    <SidebarProvider defaultOpen>
-      <div className="flex min-h-screen">
+    <SidebarProvider defaultOpen className="h-full min-h-0">
+      <div className="flex h-full min-h-0 min-w-0">
         <Sidebar collapsible="none" className="border-r">
             <SidebarHeader className="flex flex-col items-center justify-center gap-2">
               <Button
@@ -207,7 +207,11 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
             <SidebarRail />
           </Sidebar>
 
-          <SidebarInset>{children}</SidebarInset>
+          <SidebarInset className="flex min-h-0 min-w-0 flex-col overflow-hidden">
+            <div className="min-h-0 min-w-0 flex-1 overflow-auto">
+              {children}
+            </div>
+          </SidebarInset>
         </div>
 
         <UserDialog

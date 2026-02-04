@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
-import type { BoardWithColumnsAndTasks } from "@/lib/boards";
+import type { BoardWithColumnsAndTasks, ColumnWithTasks } from "@/lib/boards";
+import { darkenHex } from "@/lib/utils";
 import { ColumnCreateDialog } from "@/components/column-create-dialog";
+import { ColumnEditDialog } from "@/components/column-edit-dialog";
 import { TaskCard, type Task } from "@/components/task-card";
 import { TaskDetailDialog } from "@/components/task-detail-dialog";
 import { TaskCreateDialog } from "@/components/task-create-dialog";
@@ -30,19 +32,26 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreateColumnOpen, setIsCreateColumnOpen] = useState(false);
+  const [columnToEdit, setColumnToEdit] = useState<ColumnWithTasks | null>(null);
 
   const columns = board?.columns ?? [];
 
   return (
     <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-stretch gap-4 overflow-x-auto pb-4">
+      <div className="flex items-stretch gap-4 pb-4">
         {columns.map((column) => (
           <Card
             key={column.id}
-            className="flex min-h-[280px] min-w-[260px] max-w-xs flex-1 flex-col"
+            className={column.color ? "column-colored flex min-h-[280px] min-w-[260px] max-w-xs flex-1 flex-col" : "flex min-h-[280px] min-w-[260px] max-w-xs flex-1 flex-col"}
             style={
               column.color
-                ? { backgroundColor: column.color }
+                ? {
+                    backgroundColor: column.color,
+                    borderColor: darkenHex(column.color, 0.75),
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                    ["--column-hover" as string]: darkenHex(column.color, 0.88),
+                    ["--column-hover-subtle" as string]: darkenHex(column.color, 0.95),
+                  }
                 : undefined
             }
           >
@@ -50,9 +59,14 @@ export function BoardView({ boardId, board }: BoardViewProps) {
               <CardTitle className="text-sm font-semibold">
                 {column.title}
               </CardTitle>
-              <Button size="icon-xs" variant="ghost" className="shrink-0">
-                <Plus className="h-3 w-3" />
-                <span className="sr-only">{tBoard("empty")}</span>
+              <Button
+                size="icon-xs"
+                variant="ghost"
+                className="shrink-0"
+                aria-label={tBoard("editColumn")}
+                onClick={() => setColumnToEdit(column)}
+              >
+                <Pencil className="h-3 w-3" />
               </Button>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-3">
@@ -109,6 +123,12 @@ export function BoardView({ boardId, board }: BoardViewProps) {
           onSuccess={() => router.refresh()}
         />
       ) : null}
+      <ColumnEditDialog
+        column={columnToEdit}
+        open={!!columnToEdit}
+        onOpenChange={(open) => !open && setColumnToEdit(null)}
+        onSuccess={() => router.refresh()}
+      />
     </div>
   );
 }
