@@ -30,3 +30,17 @@ Créez, modifiez et suivez des tâches avec plusieurs utilisateurs sans compte o
 ## Objectif
 
 Démontrer une **expérience collaborative fluide**, accessible immédiatement, avec persistance pour les utilisateurs connectés et support multilingue, idéale pour un projet de portfolio.
+
+---
+
+## Fonctionnement
+
+Au chargement de l’application, l’utilisateur arrive **directement sur un tableau vierge**, sans page d’accueil intermédiaire.  
+Il peut alors **soit se connecter**, soit **continuer en tant qu’invité**, puis commencer immédiatement à organiser son travail.
+
+Une fois cette étape passée, il peut notamment :
+- **Créer des colonnes** (par exemple "À faire", "En cours", "Terminé").  
+- **Ajouter, modifier, déplacer et supprimer des tâches** dans chaque colonne.  
+- **Collaborer en temps réel** avec d’autres utilisateurs présents sur le même tableau.
+
+L’objectif est de **rentrer tout de suite dans le vif du sujet** : pas de landing page, on se concentre directement sur le tableau et les tâches.
