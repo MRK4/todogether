@@ -1,0 +1,68 @@
+---
+description: Forcer l'utilisation de next-intl pour tous les textes UI
+globs: {app,components}/**/*.tsx
+alwaysApply: false
+---
+
+# Textes UI et traductions (next-intl)
+
+Dans les fichiers `app/**/*.tsx` et `components/**/*.tsx`, **il est interdit d'écrire du texte en dur** dans le JSX. Tous les textes visibles par l'utilisateur doivent passer par `next-intl` et les fichiers `messages/*.json`.
+
+## Principe
+
+- **Ne jamais** écrire de texte brut dans le JSX (ni en français, ni en anglais).
+- **Toujours** : ajouter une clé dans `messages/en.json` et `messages/fr.json`, puis utiliser `useTranslations` (côté client) ou `getTranslations` (côté serveur) pour récupérer la traduction.
+
+## Exemples (composants client)
+
+```tsx
+// ❌ MAUVAIS : texte en dur dans le JSX
+export function Sidebar() {
+  return <button>Sign in</button>;
+}
+```
+
+```tsx
+// ✅ BON : utilisation de next-intl
+import {useTranslations} from "next-intl";
+
+export function Sidebar() {
+  const t = useTranslations("Sidebar");
+  return <button>{t("signIn")}</button>;
+}
+```
+
+## Exemples (pages / layouts server components)
+
+```tsx
+// ❌ MAUVAIS : texte en dur dans un server component
+export default function Page() {
+  return <h1>To do</h1>;
+}
+```
+
+```tsx
+// ✅ BON : utilisation de getTranslations
+import {getTranslations} from "next-intl/server";
+
+export default async function Page() {
+  const t = await getTranslations("Board.columns");
+  return <h1>{t("todo")}</h1>;
+}
+```
+
+## Gestion des fichiers de messages
+
+Pour tout nouveau texte :
+
+1. Créer une clé dans `messages/en.json`.
+2. Créer la même clé dans `messages/fr.json` avec la traduction française.
+3. Utiliser cette clé via `t("...")` dans le code.
+
+```json
+// messages/en.json
+"Sidebar": { "signIn": "Sign in" }
+
+// messages/fr.json
+"Sidebar": { "signIn": "Se connecter" }
+```

@@ -1,7 +1,13 @@
 {
   "App": {
     "titleShort": "TG",
-    "title": "ToDoGether"
+    "title": "ToDoGether",
+    "alertTitle": "Merci d'utiliser ToDoGether 🎉",
+    "alertDiscover": "Découvre ",
+    "alertMyPortfolio": "mon portfolio",
+    "alertAndThe": " et le ",
+    "alertGithubRepo": "dépôt GitHub",
+    "alertOfTheApp": " de l'app."
   },
   "Sidebar": {
     "accountBoards": "Tableaux du compte",
@@ -16,6 +22,41 @@
       "done": "Terminé"
     },
     "empty": "Aucune tâche pour l'instant."
+  },
+  "Task": {
+    "noTitle": "Sans titre",
+    "delete": "Supprimer la tâche",
+    "edit": "Modifier la tâche",
+    "description": "Description",
+    "detailTitle": "Détails de la tâche",
+    "priority": "Priorité",
+    "author": "Auteur",
+    "assignee": "Attribuée à",
+    "createdAt": "Créée le",
+    "updatedAt": "Mise à jour le",
+    "priorityLow": "Basse",
+    "priorityMedium": "Moyenne",
+    "priorityHigh": "Haute",
+    "close": "Fermer",
+    "noDescription": "Aucune description",
+    "addTask": "Ajouter une tâche",
+    "createTitle": "Créer une tâche",
+    "titleLabel": "Titre",
+    "authorLabel": "Auteur",
+    "create": "Créer",
+    "cancel": "Annuler"
+  },
+  "User": {
+    "guest": "Invité",
+    "loginTitle": "Se connecter",
+    "accountTitle": "Compte",
+    "currentUser": "Utilisateur actuel",
+    "name": "Nom",
+    "email": "E-mail",
+    "loginCta": "Se connecter",
+    "logout": "Se déconnecter",
+    "close": "Fermer",
+    "guestDescription": "Vous êtes actuellement connecté en tant qu'invité. Connectez-vous pour accéder à votre compte et sauvegarder vos tableaux."
   }
 }
 
