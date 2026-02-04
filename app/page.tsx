@@ -1,5 +1,6 @@
  "use client";
 
+import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,20 +11,25 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-const DEFAULT_COLUMNS = ["À faire", "En cours", "Terminé"];
-
 export default function Home() {
+  const tBoard = useTranslations("Board");
+  const columnKeys: Array<"todo" | "inProgress" | "done"> = [
+    "todo",
+    "inProgress",
+    "done",
+  ];
+
   return (
     <div className="flex h-full flex-1 flex-col gap-4 p-6">
       <div className="flex flex-1 gap-4 overflow-x-auto pb-4">
-        {DEFAULT_COLUMNS.map((title) => (
+        {columnKeys.map((key) => (
           <Card
-            key={title}
+            key={key}
             className="flex h-full min-h-[280px] min-w-[260px] max-w-xs flex-1 flex-col"
           >
             <CardHeader className="flex flex-row items-center justify-between gap-2 pb-4">
               <CardTitle className="text-sm font-semibold">
-                {title}
+                {tBoard(`columns.${key}`)}
               </CardTitle>
               <Button
                 size="icon-xs"
@@ -32,13 +38,13 @@ export default function Home() {
               >
                 <Plus className="h-3 w-3" />
                 <span className="sr-only">
-                  Ajouter une tâche dans &quot;{title}&quot;
+                  {tBoard("empty")}
                 </span>
               </Button>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-3">
               <div className="border-dashed bg-muted/40 text-muted-foreground flex flex-1 items-center justify-center rounded-lg border text-xs">
-                Aucune tâche pour l&apos;instant.
+                {tBoard("empty")}
               </div>
             </CardContent>
           </Card>

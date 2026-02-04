@@ -1,0 +1,21 @@
+{
+  "App": {
+    "titleShort": "TG",
+    "title": "ToDoGether"
+  },
+  "Sidebar": {
+    "accountBoards": "Tableaux du compte",
+    "newBoard": "Nouveau tableau",
+    "signIn": "Se connecter",
+    "languageToggle": "Changer de langue"
+  },
+  "Board": {
+    "columns": {
+      "todo": "À faire",
+      "inProgress": "En cours",
+      "done": "Terminé"
+    },
+    "empty": "Aucune tâche pour l'instant."
+  }
+}
+

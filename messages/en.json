@@ -1,0 +1,21 @@
+{
+  "App": {
+    "titleShort": "TG",
+    "title": "ToDoGether"
+  },
+  "Sidebar": {
+    "accountBoards": "Account boards",
+    "newBoard": "New board",
+    "signIn": "Sign in",
+    "languageToggle": "Change language"
+  },
+  "Board": {
+    "columns": {
+      "todo": "To do",
+      "inProgress": "In progress",
+      "done": "Done"
+    },
+    "empty": "No tasks yet."
+  }
+}
+
