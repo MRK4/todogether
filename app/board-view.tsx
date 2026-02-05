@@ -33,6 +33,7 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreateColumnOpen, setIsCreateColumnOpen] = useState(false);
   const [columnToEdit, setColumnToEdit] = useState<ColumnWithTasks | null>(null);
+  const [columnIdForNewTask, setColumnIdForNewTask] = useState<string | null>(null);
 
   const columns = board?.columns ?? [];
 
@@ -88,7 +89,10 @@ export function BoardView({ boardId, board }: BoardViewProps) {
               <button
                 type="button"
                 className="cursor-pointer border-dashed text-muted-foreground hover:bg-muted/60 flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors"
-                onClick={() => setIsCreateOpen(true)}
+                onClick={() => {
+                  setColumnIdForNewTask(column.id);
+                  setIsCreateOpen(true);
+                }}
               >
                 <Plus className="h-3 w-3" />
                 <span>{tTask("addTask")}</span>
@@ -114,7 +118,21 @@ export function BoardView({ boardId, board }: BoardViewProps) {
         open={!!selectedTask}
         onOpenChange={(open) => !open && setSelectedTask(null)}
       />
-      <TaskCreateDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
+      {boardId && columnIdForNewTask && (
+        <TaskCreateDialog
+          boardId={boardId}
+          columnId={columnIdForNewTask}
+          open={isCreateOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              setIsCreateOpen(false);
+              setColumnIdForNewTask(null);
+            } else {
+              setIsCreateOpen(true);
+            }
+          }}
+        />
+      )}
       {boardId ? (
         <ColumnCreateDialog
           boardId={boardId}

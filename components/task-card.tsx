@@ -6,7 +6,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export type TaskPriority = "low" | "medium" | "high";
+export type TaskPriority = "low" | "medium" | "high" | "critical";
 
 export type Task = {
   id: string;

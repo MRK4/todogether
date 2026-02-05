@@ -28,10 +28,14 @@ function formatDate(iso: string, locale: string): string {
   }
 }
 
-function priorityKey(priority: TaskPriority): "priorityLow" | "priorityMedium" | "priorityHigh" {
+function priorityKey(
+  priority: TaskPriority
+): "priorityLow" | "priorityMedium" | "priorityHigh" | "priorityCritical" {
   switch (priority) {
     case "low":
       return "priorityLow";
+    case "critical":
+      return "priorityCritical";
     case "high":
       return "priorityHigh";
     default:
