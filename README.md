@@ -27,6 +27,35 @@ Créez, modifiez et suivez des tâches avec plusieurs utilisateurs sans compte o
 
 ---
 
+## Installation
+
+1. **Cloner le dépôt**
+   ```bash
+   git clone <URL_DU_DEPOT>
+   cd todogether
+   ```
+
+2. **Configurer les variables d’environnement**
+   - Copier le fichier `.env.example` vers `.env`.
+   - Remplir les valeurs nécessaires (base de données, clés, etc.).
+
+3. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
+
+4. **Générer le client Prisma**
+   ```bash
+   npx prisma generate
+   ```
+
+5. **Lancer l’application en développement**
+   ```bash
+   npm run dev
+   ```
+
+---
+
 ## Objectif
 
 Démontrer une **expérience collaborative fluide**, accessible immédiatement, avec persistance pour les utilisateurs connectés et support multilingue, idéale pour un projet de portfolio.
