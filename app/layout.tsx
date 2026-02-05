@@ -6,6 +6,7 @@ import "./globals.css";
 import ClientSidebarLayout from "@/components/client-sidebar-layout";
 import { AlertProvider } from "@/components/alert-provider";
 import { SessionProvider } from "@/components/session-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default async function RootLayout({
             <SessionProvider>
               <AlertProvider>
                 <ClientSidebarLayout>{children}</ClientSidebarLayout>
+                <Toaster />
               </AlertProvider>
             </SessionProvider>
           </NextIntlClientProvider>

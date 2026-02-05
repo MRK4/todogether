@@ -17,6 +17,7 @@ export type Task = {
   priority: TaskPriority;
   author: string;
   assignee?: string;
+  assigneeId?: string;
   createdAt: string;
   updatedAt: string;
 };

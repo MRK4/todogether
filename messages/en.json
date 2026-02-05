@@ -13,9 +13,14 @@
     "accountBoards": "Account boards",
     "newBoard": "New board",
     "signIn": "Sign in",
-    "languageToggle": "Change language"
+    "languageToggle": "Change language",
+    "guestBoardsDialogTitle": "Sign in to use multiple boards",
+    "guestBoardsDialogDescription": "Only signed-in users can have multiple boards.",
+    "guestBoardsDialogClose": "OK"
   },
   "Board": {
+    "boardsTitle": "My boards",
+    "noBoards": "No boards yet.",
     "columns": {
       "todo": "To do",
       "inProgress": "In progress",
@@ -28,7 +33,9 @@
     "columnColorLabel": "Background color",
     "editColumn": "Edit column",
     "editColumnTitle": "Edit column",
-    "saveColumn": "Save"
+    "saveColumn": "Save",
+    "columnCreateSuccess": "Column created",
+    "columnUpdateSuccess": "Column saved"
   },
   "Task": {
     "noTitle": "Untitled",
@@ -39,6 +46,9 @@
     "priority": "Priority",
     "author": "Author",
     "assignee": "Assigned to",
+    "id": "ID",
+    "clickToCopy": "Click to copy",
+    "copied": "ID copied to clipboard",
     "createdAt": "Created",
     "updatedAt": "Updated",
       "priorityLow": "Low",
@@ -54,20 +64,33 @@
     "authorLabel": "Author",
     "create": "Create",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "assigneeNone": "Unassigned",
+    "deleteConfirmTitle": "Delete this task?",
+    "deleteConfirmDescription": "This action cannot be undone.",
+    "deleteConfirm": "Delete",
+    "createSuccess": "Task created",
+    "updateSuccess": "Task saved",
+    "deleteSuccess": "Task deleted",
+    "deleting": "Deleting…"
   },
   "Auth": {
     "login": "Log in",
+    "loginSubtitle": "Sign in to access your boards",
     "signup": "Sign up",
+    "signupSubtitle": "Create an account to save and sync your boards",
     "email": "Email",
+    "emailPlaceholder": "you@example.com",
     "password": "Password",
     "passwordConfirm": "Confirm password",
     "name": "Name",
+    "namePlaceholder": "Your name",
     "signIn": "Sign in",
     "signUp": "Create account",
     "signInWithGoogle": "Continue with Google",
     "signInWithGitHub": "Continue with GitHub",
     "noAccount": "Don't have an account?",
+    "orContinueWith": "Or continue with",
     "hasAccount": "Already have an account?",
     "invalidCredentials": "Invalid email or password.",
     "emailAlreadyUsed": "This email is already in use.",

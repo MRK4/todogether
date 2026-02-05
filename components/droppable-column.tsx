@@ -34,9 +34,14 @@ export function DroppableColumn({
         isOver ? "rounded-lg bg-primary/5" : ""
       }`}
     >
-      {taskListContent}
-      {isOver && <DropPlaceholder />}
-      {addTaskButton}
+      {isOver ? (
+        <DropPlaceholder />
+      ) : (
+        <>
+          {taskListContent}
+          {addTaskButton}
+        </>
+      )}
     </div>
   );
 }

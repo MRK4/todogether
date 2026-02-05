@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const PRESET_COLORS = [
   "#ffffff",
@@ -59,10 +60,13 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
   useEffect(() => {
     if (state?.success && !hasHandledSuccessRef.current) {
       hasHandledSuccessRef.current = true;
+      toast.success(t("columnUpdateSuccess"));
       onOpenChange(false);
       onSuccess?.();
+    } else if (state && !state.success) {
+      toast.error(state.error);
     }
-  }, [state, onOpenChange, onSuccess]);
+  }, [state, onOpenChange, onSuccess, t]);
 
   const handleCancel = () => onOpenChange(false);
 

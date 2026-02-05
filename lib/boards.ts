@@ -27,19 +27,28 @@ function mapDbTaskToCardTask(
     id: string;
     title: string;
     description: string | null;
+    priority: string | null;
     createdAt: Date;
     updatedAt: Date;
+    assigneeId: string | null;
     assignee: { name: string | null } | null;
   }
 ): TaskCardTask {
   const assigneeName = t.assignee?.name ?? "";
+  const priority = t.priority as TaskCardTask["priority"];
   return {
     id: t.id,
     title: t.title,
     description: t.description ?? undefined,
-    priority: "medium",
+    priority:
+      priority === "low" ||
+      priority === "high" ||
+      priority === "critical"
+        ? priority
+        : "medium",
     author: assigneeName,
     assignee: assigneeName || undefined,
+    assigneeId: t.assigneeId ?? undefined,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
   };
@@ -47,6 +56,17 @@ function mapDbTaskToCardTask(
 
 export async function getBoards(): Promise<BoardListItem[]> {
   const boards = await prisma.board.findMany({
+    orderBy: { createdAt: "asc" },
+    select: { id: true, title: true, description: true },
+  });
+  return boards;
+}
+
+export async function getBoardsForUser(
+  userId: string
+): Promise<BoardListItem[]> {
+  const boards = await prisma.board.findMany({
+    where: { ownerId: userId },
     orderBy: { createdAt: "asc" },
     select: { id: true, title: true, description: true },
   });
@@ -75,8 +95,10 @@ export async function getBoardWithColumnsAndTasks(
               id: true,
               title: true,
               description: true,
+              priority: true,
               createdAt: true,
               updatedAt: true,
+              assigneeId: true,
               assignee: { select: { name: true } },
             },
           },

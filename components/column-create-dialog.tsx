@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const PRESET_COLORS = [
   "#ffffff", // pure white
@@ -49,10 +50,13 @@ export function ColumnCreateDialog(props: ColumnCreateDialogProps) {
   useEffect(() => {
     if (state?.success && state.columnId !== lastHandledColumnIdRef.current) {
       lastHandledColumnIdRef.current = state.columnId;
+      toast.success(t("columnCreateSuccess"));
       onOpenChange(false);
       onSuccess?.();
+    } else if (state && !state.success) {
+      toast.error(state.error);
     }
-  }, [state, onOpenChange, onSuccess]);
+  }, [state, onOpenChange, onSuccess, t]);
 
   const handleCancel = () => onOpenChange(false);
 

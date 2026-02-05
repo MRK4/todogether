@@ -104,6 +104,8 @@ model Task {
   title       String
   description String?
   order       Int
+  /// Priorité : low, medium, high, critical
+  priority String? @default("medium")
 
   boardId  String
   board    Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)

@@ -13,9 +13,14 @@
     "accountBoards": "Tableaux du compte",
     "newBoard": "Nouveau tableau",
     "signIn": "Se connecter",
-    "languageToggle": "Changer de langue"
+    "languageToggle": "Changer de langue",
+    "guestBoardsDialogTitle": "Connectez-vous pour avoir plusieurs tableaux",
+    "guestBoardsDialogDescription": "Seuls les utilisateurs connectés peuvent avoir plusieurs tableaux.",
+    "guestBoardsDialogClose": "OK"
   },
   "Board": {
+    "boardsTitle": "Mes tableaux",
+    "noBoards": "Aucun tableau pour l'instant.",
     "columns": {
       "todo": "À faire",
       "inProgress": "En cours",
@@ -28,7 +33,9 @@
     "columnColorLabel": "Couleur de fond",
     "editColumn": "Modifier la colonne",
     "editColumnTitle": "Modifier la colonne",
-    "saveColumn": "Enregistrer"
+    "saveColumn": "Enregistrer",
+    "columnCreateSuccess": "Colonne créée",
+    "columnUpdateSuccess": "Colonne enregistrée"
   },
   "Task": {
     "noTitle": "Sans titre",
@@ -39,6 +46,9 @@
     "priority": "Priorité",
     "author": "Auteur",
     "assignee": "Attribuée à",
+    "id": "ID",
+    "clickToCopy": "Cliquez pour copier",
+    "copied": "ID copié dans le presse-papiers",
     "createdAt": "Créée le",
     "updatedAt": "Mise à jour le",
       "priorityLow": "Basse",
@@ -54,20 +64,33 @@
     "authorLabel": "Auteur",
     "create": "Créer",
     "cancel": "Annuler",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "assigneeNone": "Non assigné",
+    "deleteConfirmTitle": "Supprimer cette tâche ?",
+    "deleteConfirmDescription": "Cette action est irréversible.",
+    "deleteConfirm": "Supprimer",
+    "createSuccess": "Tâche créée",
+    "updateSuccess": "Tâche enregistrée",
+    "deleteSuccess": "Tâche supprimée",
+    "deleting": "Suppression…"
   },
   "Auth": {
     "login": "Connexion",
+    "loginSubtitle": "Connectez-vous pour accéder à vos tableaux",
     "signup": "Inscription",
+    "signupSubtitle": "Créez un compte pour sauvegarder et synchroniser vos tableaux",
     "email": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
     "password": "Mot de passe",
     "passwordConfirm": "Confirmer le mot de passe",
     "name": "Nom",
+    "namePlaceholder": "Votre nom",
     "signIn": "Se connecter",
     "signUp": "Créer un compte",
     "signInWithGoogle": "Continuer avec Google",
     "signInWithGitHub": "Continuer avec GitHub",
     "noAccount": "Pas encore de compte ?",
+    "orContinueWith": "Ou continuer avec",
     "hasAccount": "Déjà un compte ?",
     "invalidCredentials": "E-mail ou mot de passe incorrect.",
     "emailAlreadyUsed": "Cet e-mail est déjà utilisé.",

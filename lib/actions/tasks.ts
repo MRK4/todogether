@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 const createTaskSchema = z.object({
   title: z.string().min(1, "Le titre est requis").max(200),
   description: z.string().max(2000).optional(),
-  priority: z.enum(["low", "medium", "high"]).optional(),
+  priority: z.enum(["low", "medium", "high", "critical"]).optional(),
 });
 
 export type CreateTaskState =
@@ -60,6 +60,13 @@ export async function createTask(
   const session = await auth();
   const assigneeId = session?.user?.id ?? null;
 
+  const priority =
+    parsed.data.priority === "low" ||
+    parsed.data.priority === "high" ||
+    parsed.data.priority === "critical"
+      ? parsed.data.priority
+      : "medium";
+
   const task = await prisma.task.create({
     data: {
       boardId,
@@ -67,6 +74,7 @@ export async function createTask(
       title: parsed.data.title.trim(),
       description: parsed.data.description?.trim() || null,
       order,
+      priority,
       assigneeId,
     },
   });
@@ -125,6 +133,8 @@ export async function moveTask(
 const updateTaskSchema = z.object({
   title: z.string().min(1, "Le titre est requis").max(200),
   description: z.string().max(2000).optional(),
+  priority: z.enum(["low", "medium", "high", "critical"]).optional(),
+  assigneeId: z.string().optional(),
 });
 
 export type UpdateTaskResult =
@@ -139,6 +149,8 @@ export async function updateTask(
   const raw = {
     title: formData.get("title") ?? "",
     description: (formData.get("description") as string) ?? "",
+    priority: (formData.get("priority") as string) ?? "medium",
+    assigneeId: (formData.get("assigneeId") as string) ?? "",
   };
 
   const parsed = updateTaskSchema.safeParse(raw);
@@ -161,11 +173,22 @@ export async function updateTask(
     return { success: false, error: "Task not found" };
   }
 
+  const priority =
+    parsed.data.priority === "low" ||
+    parsed.data.priority === "high" ||
+    parsed.data.priority === "critical"
+      ? parsed.data.priority
+      : "medium";
+  const assigneeId =
+    parsed.data.assigneeId?.trim() || null;
+
   await prisma.task.update({
     where: { id: taskId },
     data: {
       title: parsed.data.title.trim(),
       description: parsed.data.description?.trim() || null,
+      priority,
+      assigneeId,
     },
   });
 
@@ -173,5 +196,41 @@ export async function updateTask(
   revalidatePath(`/boards/${task.boardId}`);
 
   return { success: true };
+}
+
+export type DeleteTaskResult =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function deleteTask(taskId: string): Promise<DeleteTaskResult> {
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: { id: true, boardId: true },
+  });
+  if (!task) {
+    return { success: false, error: "Task not found" };
+  }
+  await prisma.task.delete({ where: { id: taskId } });
+  revalidatePath("/");
+  revalidatePath(`/boards/${task.boardId}`);
+  return { success: true };
+}
+
+export type UserOption = {
+  id: string;
+  name: string | null;
+  email: string;
+};
+
+export async function getUsers(): Promise<UserOption[]> {
+  const users = await prisma.user.findMany({
+    orderBy: { email: "asc" },
+    select: { id: true, name: true, email: true },
+  });
+  return users.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+  }));
 }
 

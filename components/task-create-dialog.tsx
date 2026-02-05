@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 type TaskCreateDialogProps = {
   boardId: string;
@@ -62,9 +63,12 @@ export function TaskCreateDialog({
   useEffect(() => {
     if (state?.success && state.taskId !== lastHandledTaskIdRef.current) {
       lastHandledTaskIdRef.current = state.taskId;
+      toast.success(t("createSuccess"));
       onOpenChange(false);
+    } else if (state && !state.success) {
+      toast.error(state.error);
     }
-  }, [state, onOpenChange]);
+  }, [state, onOpenChange, t]);
 
   const handleCancel = () => {
     onOpenChange(false);

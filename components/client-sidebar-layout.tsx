@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { LayoutDashboard, Plus, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
@@ -24,6 +25,14 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { UserDialog } from "@/components/user-dialog";
 
 type ClientSidebarLayoutProps = {
@@ -66,6 +75,7 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
   const router = useRouter();
 
   const [userDialogOpen, setUserDialogOpen] = useState(false);
+  const [guestBoardsDialogOpen, setGuestBoardsDialogOpen] = useState(false);
   const rabbitRef = useRef<RabbitIconHandle | null>(null);
   const { showAlert } = useAppAlert();
   const { data: session, status } = useSession();
@@ -101,10 +111,14 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
     ? user?.name ?? tUser("accountTitle")
     : tUser("guest");
 
+  const handleBoardsAction = () => {
+    if (!isAuthenticated) setGuestBoardsDialogOpen(true);
+  };
+
   return (
     <SidebarProvider defaultOpen className="h-full min-h-0">
-      <div className="flex h-full min-h-0 min-w-0">
-        <Sidebar collapsible="none" className="border-r">
+<div className="flex h-full min-h-0 min-w-0 w-full">
+          <Sidebar collapsible="none" className="border-r">
             <SidebarHeader className="flex flex-col items-center justify-center gap-2">
               <Button
                 variant="ghost"
@@ -177,11 +191,14 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton
+                      asChild
                       size="lg"
                       className="justify-center"
                       tooltip={tSidebar("accountBoards")}
                     >
-                      <LayoutDashboard />
+                      <Link href={isAuthenticated ? "/boards" : "/"}>
+                        <LayoutDashboard />
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
@@ -189,6 +206,7 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
                       size="lg"
                       className="justify-center border border-dashed border-sidebar-border"
                       tooltip={tSidebar("newBoard")}
+                      onClick={handleBoardsAction}
                     >
                       <Plus />
                     </SidebarMenuButton>
@@ -207,8 +225,8 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
             <SidebarRail />
           </Sidebar>
 
-          <SidebarInset className="flex min-h-0 min-w-0 flex-col overflow-hidden">
-            <div className="min-h-0 min-w-0 flex-1 overflow-auto">
+          <SidebarInset className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="min-h-0 min-w-0 flex-1 min-w-full w-full overflow-auto">
               {children}
             </div>
           </SidebarInset>
@@ -222,6 +240,33 @@ export function ClientSidebarLayout({ children }: ClientSidebarLayoutProps) {
           onLogin={handleLogin}
           onLogout={handleLogout}
         />
+
+        <AlertDialog
+          open={guestBoardsDialogOpen}
+          onOpenChange={setGuestBoardsDialogOpen}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {tSidebar("guestBoardsDialogTitle")}
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                {tSidebar("guestBoardsDialogDescription")}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Button
+                type="button"
+                onClick={() => {
+                  setGuestBoardsDialogOpen(false);
+                  router.push("/login");
+                }}
+              >
+                {tSidebar("guestBoardsDialogClose")}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </SidebarProvider>
   );
 }
