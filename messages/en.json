@@ -45,6 +45,7 @@
       "priorityMedium": "Medium",
       "priorityHigh": "High",
       "priorityCritical": "Critical",
+      "me": "Me",
     "close": "Close",
     "noDescription": "No description",
     "addTask": "Add task",
