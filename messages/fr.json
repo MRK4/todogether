@@ -53,7 +53,8 @@
     "titleLabel": "Titre",
     "authorLabel": "Auteur",
     "create": "Créer",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "save": "Enregistrer"
   },
   "Auth": {
     "login": "Connexion",

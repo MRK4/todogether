@@ -53,7 +53,8 @@
     "titleLabel": "Title",
     "authorLabel": "Author",
     "create": "Create",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "Auth": {
     "login": "Log in",
