@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { getBoards } from "@/lib/boards";
+import { auth } from "@/auth";
+import { getBoardsForUser } from "@/lib/boards";
 
 export async function GET() {
-  const boards = await getBoards();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json([]);
+  }
+  const boards = await getBoardsForUser(session.user.id);
   return NextResponse.json(boards);
 }

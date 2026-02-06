@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 type DroppableColumnProps = {
   id: string;
   taskListContent: ReactNode;
-  addTaskButton: ReactNode;
+  addTaskButton?: ReactNode | null;
 };
 
 function DropPlaceholder() {
@@ -39,7 +39,7 @@ export function DroppableColumn({
       ) : (
         <>
           {taskListContent}
-          {addTaskButton}
+          {addTaskButton ?? null}
         </>
       )}
     </div>

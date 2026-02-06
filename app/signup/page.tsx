@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Shuffle } from "lucide-react";
 
 import {
   signUp,
@@ -22,10 +23,53 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
+const PSEUDONYM_ADJECTIVES = [
+  "Swift",
+  "Happy",
+  "Calm",
+  "Bold",
+  "Bright",
+  "Cosy",
+  "Daring",
+  "Eager",
+  "Gentle",
+  "Jolly",
+  "Lucky",
+  "Noble",
+  "Quick",
+  "Silent",
+  "Wise",
+];
+
+const PSEUDONYM_NOUNS = [
+  "Fox",
+  "Rabbit",
+  "Owl",
+  "Bear",
+  "Wolf",
+  "Lynx",
+  "Hawk",
+  "Deer",
+  "Panda",
+  "Tiger",
+  "Eagle",
+  "Otter",
+  "Crow",
+  "Seal",
+  "Dove",
+];
+
+function generateRandomPseudonym(): string {
+  const adj = PSEUDONYM_ADJECTIVES[Math.floor(Math.random() * PSEUDONYM_ADJECTIVES.length)]!;
+  const noun = PSEUDONYM_NOUNS[Math.floor(Math.random() * PSEUDONYM_NOUNS.length)]!;
+  return `${adj}${noun}`;
+}
+
 export default function SignUpPage() {
   const t = useTranslations("Auth");
   const [state, formAction] = useActionState(signUp, null as SignUpState | null);
   const [pending, setPending] = useState(false);
+  const [pseudonym, setPseudonym] = useState("");
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-muted/40 px-4 py-12">
@@ -72,15 +116,30 @@ export default function SignUpPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="name">{t("name")}</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  placeholder={t("namePlaceholder")}
-                  className="h-10"
-                />
+                <Label htmlFor="name">{t("pseudonym")}</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="username"
+                    placeholder={t("pseudonymPlaceholder")}
+                    className="h-10 flex-1"
+                    value={pseudonym}
+                    onChange={(e) => setPseudonym(e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-10 shrink-0"
+                    onClick={() => setPseudonym(generateRandomPseudonym())}
+                    title={t("generatePseudonym")}
+                    aria-label={t("generatePseudonym")}
+                  >
+                    <Shuffle className="size-4" />
+                  </Button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">{t("password")}</Label>

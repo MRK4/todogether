@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { signOut } from "next-auth/react";
+
+import { deleteAccount, type DeleteAccountResult } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -59,7 +62,20 @@ export function UserDialog({
     onOpenChange(false);
   };
 
+  const handleConfirmDeleteAccount = async () => {
+    setIsDeleting(true);
+    const result: DeleteAccountResult = await deleteAccount();
+    setIsDeleting(false);
+    setConfirmDeleteOpen(false);
+    onOpenChange(false);
+    if (result.success) {
+      await signOut({ callbackUrl: "/" });
+    }
+  };
+
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleClearGuestData = () => {
     clearGuestStorage();
@@ -90,11 +106,6 @@ export function UserDialog({
           </div>
         ) : (
           <div className="grid gap-4 py-2">
-            <div>
-              <p className="text-xs text-muted-foreground font-mono">
-                {t("currentUser")}
-              </p>
-            </div>
             <dl className="grid gap-3 text-sm">
               <div className="flex flex-col gap-0.5">
                 <dt className="text-muted-foreground font-medium font-mono">
@@ -147,9 +158,48 @@ export function UserDialog({
               <Button onClick={handleLogin}>{t("loginCta")}</Button>
             </>
           ) : (
-            <Button variant="destructive" onClick={handleLogout}>
-              {t("logout")}
-            </Button>
+            <>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => setConfirmDeleteOpen(true)}
+                disabled={isDeleting}
+              >
+                {t("deleteAccount")}
+              </Button>
+              <AlertDialog
+                open={confirmDeleteOpen}
+                onOpenChange={setConfirmDeleteOpen}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      {t("deleteAccountConfirmTitle")}
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("deleteAccountConfirmDescription")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={isDeleting}>
+                      {t("cancel")}
+                    </AlertDialogCancel>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={isDeleting}
+                      onClick={handleConfirmDeleteAccount}
+                    >
+                      {isDeleting ? t("deleting") : t("deleteAccountConfirm")}
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <Button variant="default" onClick={handleLogout}>
+                {t("logout")}
+              </Button>
+            </>
           )}
         </DialogFooter>
       </DialogContent>

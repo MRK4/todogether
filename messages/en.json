@@ -10,6 +10,7 @@
     "alertOfTheApp": " of the app."
   },
   "Sidebar": {
+    "myBoard": "My board",
     "accountBoards": "Account boards",
     "newBoard": "New board",
     "signIn": "Sign in",
@@ -21,6 +22,7 @@
   "Board": {
     "boardsTitle": "My boards",
     "noBoards": "No boards yet.",
+    "newBoardDefaultTitle": "New board",
     "columns": {
       "todo": "To do",
       "inProgress": "In progress",
@@ -35,7 +37,14 @@
     "editColumnTitle": "Edit column",
     "saveColumn": "Save",
     "columnCreateSuccess": "Column created",
-    "columnUpdateSuccess": "Column saved"
+    "columnUpdateSuccess": "Column saved",
+    "boardTitlePlaceholder": "Board name",
+    "deleteBoard": "Delete board",
+    "deleteBoardConfirmTitle": "Delete this board?",
+    "deleteBoardConfirmDescription": "All columns and tasks will be permanently deleted.",
+    "deleteBoardConfirm": "Delete",
+    "lock": "Lock",
+    "unlock": "Unlock"
   },
   "Task": {
     "noTitle": "Untitled",
@@ -85,6 +94,9 @@
     "passwordConfirm": "Confirm password",
     "name": "Name",
     "namePlaceholder": "Your name",
+    "pseudonym": "Pseudonym",
+    "pseudonymPlaceholder": "Choose a display name",
+    "generatePseudonym": "Generate",
     "signIn": "Sign in",
     "signUp": "Create account",
     "signInWithGoogle": "Continue with Google",
@@ -106,6 +118,11 @@
     "email": "Email",
     "loginCta": "Sign in",
     "logout": "Log out",
+    "deleteAccount": "Delete my account",
+    "deleteAccountConfirmTitle": "Delete your account?",
+    "deleteAccountConfirmDescription": "This action is irreversible. All your data will be permanently deleted.",
+    "deleteAccountConfirm": "Delete",
+    "deleting": "Deleting…",
     "close": "Close",
     "cancel": "Cancel",
     "clearGuestData": "Clear my data",

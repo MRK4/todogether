@@ -10,6 +10,7 @@
     "alertOfTheApp": " de l'app."
   },
   "Sidebar": {
+    "myBoard": "Mon tableau",
     "accountBoards": "Tableaux du compte",
     "newBoard": "Nouveau tableau",
     "signIn": "Se connecter",
@@ -21,6 +22,7 @@
   "Board": {
     "boardsTitle": "Mes tableaux",
     "noBoards": "Aucun tableau pour l'instant.",
+    "newBoardDefaultTitle": "Nouveau tableau",
     "columns": {
       "todo": "À faire",
       "inProgress": "En cours",
@@ -35,7 +37,14 @@
     "editColumnTitle": "Modifier la colonne",
     "saveColumn": "Enregistrer",
     "columnCreateSuccess": "Colonne créée",
-    "columnUpdateSuccess": "Colonne enregistrée"
+    "columnUpdateSuccess": "Colonne enregistrée",
+    "boardTitlePlaceholder": "Nom du tableau",
+    "deleteBoard": "Supprimer le tableau",
+    "deleteBoardConfirmTitle": "Supprimer ce tableau ?",
+    "deleteBoardConfirmDescription": "Toutes les colonnes et tâches seront définitivement supprimées.",
+    "deleteBoardConfirm": "Supprimer",
+    "lock": "Verrouiller",
+    "unlock": "Déverrouiller"
   },
   "Task": {
     "noTitle": "Sans titre",
@@ -85,6 +94,9 @@
     "passwordConfirm": "Confirmer le mot de passe",
     "name": "Nom",
     "namePlaceholder": "Votre nom",
+    "pseudonym": "Pseudonyme",
+    "pseudonymPlaceholder": "Choisir un nom d'affichage",
+    "generatePseudonym": "Générer",
     "signIn": "Se connecter",
     "signUp": "Créer un compte",
     "signInWithGoogle": "Continuer avec Google",
@@ -106,6 +118,11 @@
     "email": "E-mail",
     "loginCta": "Se connecter",
     "logout": "Se déconnecter",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteAccountConfirmTitle": "Supprimer votre compte ?",
+    "deleteAccountConfirmDescription": "Cette action est irréversible. Toutes vos données seront définitivement supprimées.",
+    "deleteAccountConfirm": "Supprimer",
+    "deleting": "Suppression…",
     "close": "Fermer",
     "cancel": "Annuler",
     "clearGuestData": "Effacer mes données",

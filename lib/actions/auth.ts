@@ -5,8 +5,36 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { AuthError } from "next-auth";
 
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
+
+export type DeleteAccountResult =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function deleteAccount(): Promise<DeleteAccountResult> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  await prisma.$transaction([
+    prisma.board.updateMany({
+      where: { ownerId: userId },
+      data: { ownerId: null },
+    }),
+    prisma.task.updateMany({
+      where: { assigneeId: userId },
+      data: { assigneeId: null },
+    }),
+    prisma.account.deleteMany({ where: { userId } }),
+    prisma.session.deleteMany({ where: { userId } }),
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
+
+  return { success: true };
+}
 
 const signUpSchema = z
   .object({

@@ -73,6 +73,7 @@ model Board {
   id          String    @id @default(cuid())
   title       String
   description String?
+  locked      Boolean   @default(false)
 
   ownerId String?
   owner   User?      @relation("UserBoards", fields: [ownerId], references: [id])

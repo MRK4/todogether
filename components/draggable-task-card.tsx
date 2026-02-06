@@ -8,9 +8,10 @@ import { TaskCard, type Task } from "@/components/task-card";
 type DraggableTaskCardProps = {
   task: Task;
   onClick?: (task: Task) => void;
+  disabled?: boolean;
 };
 
-export function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
+export function DraggableTaskCard({ task, onClick, disabled }: DraggableTaskCardProps) {
   const {
     attributes,
     listeners,
@@ -19,6 +20,7 @@ export function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
     isDragging,
   } = useDraggable({
     id: task.id,
+    disabled,
   });
 
   const style = transform
@@ -32,8 +34,7 @@ export function DraggableTaskCard({ task, onClick }: DraggableTaskCardProps) {
       ref={setNodeRef}
       style={style}
       className={isDragging ? "opacity-50" : undefined}
-      {...listeners}
-      {...attributes}
+      {...(disabled ? {} : { ...listeners, ...attributes })}
     >
       <TaskCard task={task} onClick={onClick} />
     </div>

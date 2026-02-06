@@ -47,6 +47,7 @@ type TaskDetailDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onTaskUpdated?: () => void;
+  isBoardLocked?: boolean;
 };
 
 function formatDate(iso: string, locale: string): string {
@@ -94,6 +95,7 @@ export function TaskDetailDialog({
   open,
   onOpenChange,
   onTaskUpdated,
+  isBoardLocked = false,
 }: TaskDetailDialogProps) {
   const t = useTranslations("Task");
   const locale = useLocale();
@@ -388,21 +390,28 @@ export function TaskDetailDialog({
               </dl>
             </div>
             <DialogFooter>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => setDeleteConfirmOpen(true)}
-                    disabled={isDeleting}
-                    aria-label={t("delete")}
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{t("delete")}</TooltipContent>
-              </Tooltip>
-              <Button onClick={() => setIsEditing(true)}>{t("edit")}</Button>
+              {!isBoardLocked && (
+                <>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => setDeleteConfirmOpen(true)}
+                        disabled={isDeleting}
+                        aria-label={t("delete")}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t("delete")}</TooltipContent>
+                  </Tooltip>
+                  <Button onClick={() => setIsEditing(true)}>{t("edit")}</Button>
+                </>
+              )}
+              {isBoardLocked && (
+                <Button onClick={() => onOpenChange(false)}>{t("close")}</Button>
+              )}
             </DialogFooter>
             <AlertDialog
               open={deleteConfirmOpen}

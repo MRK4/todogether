@@ -1,3 +1,5 @@
+import { revalidatePath } from "next/cache";
+
 import type { Task as TaskCardTask } from "@/components/task-card";
 import { prisma } from "@/lib/prisma";
 
@@ -19,6 +21,7 @@ export type BoardWithColumnsAndTasks = {
   id: string;
   title: string;
   description: string | null;
+  locked: boolean;
   columns: ColumnWithTasks[];
 };
 
@@ -73,6 +76,75 @@ export async function getBoardsForUser(
   return boards;
 }
 
+export type CreateBoardResult =
+  | { success: true; boardId: string }
+  | { success: false; error: string };
+
+export async function createBoard(
+  userId: string,
+  title: string
+): Promise<CreateBoardResult> {
+  const board = await prisma.board.create({
+    data: {
+      title,
+      ownerId: userId,
+    },
+    select: { id: true },
+  });
+  revalidatePath("/");
+  revalidatePath("/boards");
+  return { success: true, boardId: board.id };
+}
+
+export type UpdateBoardResult =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function updateBoardTitle(
+  boardId: string,
+  title: string
+): Promise<UpdateBoardResult> {
+  if (!title.trim()) return { success: false, error: "Title required" };
+  await prisma.board.update({
+    where: { id: boardId },
+    data: { title: title.trim() },
+  });
+  revalidatePath("/");
+  revalidatePath("/boards");
+  revalidatePath(`/boards/${boardId}`);
+  return { success: true };
+}
+
+export async function updateBoardLocked(
+  boardId: string,
+  locked: boolean
+): Promise<UpdateBoardResult> {
+  await prisma.board.update({
+    where: { id: boardId },
+    data: { locked },
+  });
+  revalidatePath("/");
+  revalidatePath("/boards");
+  revalidatePath(`/boards/${boardId}`);
+  return { success: true };
+}
+
+export type DeleteBoardResult =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function deleteBoard(boardId: string): Promise<DeleteBoardResult> {
+  const board = await prisma.board.findUnique({
+    where: { id: boardId },
+    select: { id: true },
+  });
+  if (!board) return { success: false, error: "Board not found" };
+  await prisma.board.delete({ where: { id: boardId } });
+  revalidatePath("/");
+  revalidatePath("/boards");
+  return { success: true };
+}
+
 export async function getBoardWithColumnsAndTasks(
   boardId: string
 ): Promise<BoardWithColumnsAndTasks | null> {
@@ -82,6 +154,7 @@ export async function getBoardWithColumnsAndTasks(
       id: true,
       title: true,
       description: true,
+      locked: true,
       columns: {
         orderBy: { order: "asc" },
         select: {
@@ -112,6 +185,7 @@ export async function getBoardWithColumnsAndTasks(
     id: board.id,
     title: board.title,
     description: board.description,
+    locked: board.locked ?? false,
     columns: board.columns.map((col) => ({
       id: col.id,
       title: col.title,
