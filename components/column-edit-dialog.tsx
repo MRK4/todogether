@@ -33,10 +33,14 @@ type ColumnEditDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  onUpdateColumnLocal?: (
+    columnId: string,
+    data: { color: string | null }
+  ) => Promise<{ success: boolean; error?: string }>;
 };
 
 export function ColumnEditDialog(props: ColumnEditDialogProps) {
-  const { column, open, onOpenChange, onSuccess } = props;
+  const { column, open, onOpenChange, onSuccess, onUpdateColumnLocal } = props;
   const t = useTranslations("Board");
   const tTask = useTranslations("Task");
   const [selectedColor, setSelectedColor] = useState<string>(PRESET_COLORS[0]!);
@@ -67,6 +71,24 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
 
   const handleCancel = () => onOpenChange(false);
 
+  const handleLocalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!onUpdateColumnLocal || !column) return;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const color = (formData.get("color") as string)?.trim() || null;
+    const result = await onUpdateColumnLocal(column.id, { color });
+    if (result.success) {
+      toast.success(t("columnUpdateSuccess"));
+      onOpenChange(false);
+      onSuccess?.();
+    } else if (result.error) {
+      toast.error(result.error);
+    }
+  };
+
+  const useLocalSubmit = !!onUpdateColumnLocal;
+
   if (!column) return null;
 
   return (
@@ -75,7 +97,11 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
         <DialogHeader>
           <DialogTitle>{t("columnColorLabel")}</DialogTitle>
         </DialogHeader>
-        <form className="grid gap-4 py-2" action={formAction}>
+        <form
+          className="grid gap-4 py-2"
+          action={useLocalSubmit ? undefined : formAction}
+          onSubmit={useLocalSubmit ? handleLocalSubmit : undefined}
+        >
           <input type="hidden" name="title" value={column.title} />
           <div className="grid gap-2">
             <Label>{t("columnColorLabel")}</Label>

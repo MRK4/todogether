@@ -42,12 +42,25 @@ import {
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+export type UpdateTaskLocalData = {
+  title: string;
+  description?: string | null;
+  priority: string;
+};
+
 type TaskDetailDialogProps = {
   task: Task | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onTaskUpdated?: () => void;
   isBoardLocked?: boolean;
+  onUpdateTaskLocal?: (
+    taskId: string,
+    data: UpdateTaskLocalData
+  ) => Promise<{ success: boolean; error?: string }>;
+  onDeleteTaskLocal?: (
+    taskId: string
+  ) => Promise<{ success: boolean; error?: string }>;
 };
 
 function formatDate(iso: string, locale: string): string {
@@ -96,6 +109,8 @@ export function TaskDetailDialog({
   onOpenChange,
   onTaskUpdated,
   isBoardLocked = false,
+  onUpdateTaskLocal,
+  onDeleteTaskLocal,
 }: TaskDetailDialogProps) {
   const t = useTranslations("Task");
   const locale = useLocale();
@@ -151,6 +166,31 @@ export function TaskDetailDialog({
     }
   }, [state, onTaskUpdated, onOpenChange, t]);
 
+  const handleLocalUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!onUpdateTaskLocal || !task) return;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = (formData.get("title") as string)?.trim() ?? "";
+    const description = (formData.get("description") as string)?.trim() || undefined;
+    const priority = (formData.get("priority") as string) ?? "medium";
+    if (!title) {
+      toast.error(t("titleLabel"));
+      return;
+    }
+    const result = await onUpdateTaskLocal(task.id, { title, description, priority });
+    if (result.success) {
+      toast.success(t("updateSuccess"));
+      onTaskUpdated?.();
+      onOpenChange(false);
+      setIsEditing(false);
+    } else if (result.error) {
+      toast.error(result.error);
+    }
+  };
+
+  const useLocalUpdate = !!onUpdateTaskLocal;
+
   if (!task) return null;
 
   return (
@@ -162,7 +202,11 @@ export function TaskDetailDialog({
           </DialogTitle>
         </DialogHeader>
         {isEditing ? (
-          <form className="grid gap-4 py-2" action={formAction}>
+          <form
+            className="grid gap-4 py-2"
+            action={useLocalUpdate ? undefined : formAction}
+            onSubmit={useLocalUpdate ? handleLocalUpdate : undefined}
+          >
             <div className="grid gap-1">
               <label
                 htmlFor="task-edit-title"
@@ -452,15 +496,28 @@ export function TaskDetailDialog({
                     onClick={async () => {
                       if (!task) return;
                       setIsDeleting(true);
-                      const result = await deleteTask(task.id);
-                      setIsDeleting(false);
-                      setDeleteConfirmOpen(false);
-                      onOpenChange(false);
-                      if (result.success) {
-                        onTaskUpdated?.();
-                        toast.success(t("deleteSuccess"));
+                      if (onDeleteTaskLocal) {
+                        const result = await onDeleteTaskLocal(task.id);
+                        setIsDeleting(false);
+                        setDeleteConfirmOpen(false);
+                        onOpenChange(false);
+                        if (result.success) {
+                          onTaskUpdated?.();
+                          toast.success(t("deleteSuccess"));
+                        } else if (result.error) {
+                          toast.error(result.error);
+                        }
                       } else {
-                        toast.error(result.error);
+                        const result = await deleteTask(task.id);
+                        setIsDeleting(false);
+                        setDeleteConfirmOpen(false);
+                        onOpenChange(false);
+                        if (result.success) {
+                          onTaskUpdated?.();
+                          toast.success(t("deleteSuccess"));
+                        } else {
+                          toast.error(result.error);
+                        }
                       }
                     }}
                   >

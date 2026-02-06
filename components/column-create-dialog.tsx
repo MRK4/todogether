@@ -28,15 +28,23 @@ const PRESET_COLORS = [
   "#fef9c3", // yellow-100
 ];
 
+export type CreateColumnLocalData = {
+  title: string;
+  color?: string | null;
+};
+
 type ColumnCreateDialogProps = {
   boardId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  onCreateColumnLocal?: (
+    data: CreateColumnLocalData
+  ) => Promise<{ success: boolean; error?: string }>;
 };
 
 export function ColumnCreateDialog(props: ColumnCreateDialogProps) {
-  const { boardId, open, onOpenChange, onSuccess } = props;
+  const { boardId, open, onOpenChange, onSuccess, onCreateColumnLocal } = props;
   const t = useTranslations("Board");
   const tTask = useTranslations("Task");
   const [selectedColor, setSelectedColor] = useState<string>(PRESET_COLORS[0]!);
@@ -60,13 +68,40 @@ export function ColumnCreateDialog(props: ColumnCreateDialogProps) {
 
   const handleCancel = () => onOpenChange(false);
 
+  const handleLocalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!onCreateColumnLocal) return;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = (formData.get("title") as string)?.trim() ?? "";
+    const color = (formData.get("color") as string)?.trim() || undefined;
+    if (!title) {
+      toast.error(t("columnTitleLabel"));
+      return;
+    }
+    const result = await onCreateColumnLocal({ title, color: color || null });
+    if (result.success) {
+      toast.success(t("columnCreateSuccess"));
+      onOpenChange(false);
+      onSuccess?.();
+    } else if (result.error) {
+      toast.error(result.error);
+    }
+  };
+
+  const useLocalSubmit = !!onCreateColumnLocal;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("createColumnTitle")}</DialogTitle>
         </DialogHeader>
-        <form className="grid gap-4 py-2" action={formAction}>
+        <form
+          className="grid gap-4 py-2"
+          action={useLocalSubmit ? undefined : formAction}
+          onSubmit={useLocalSubmit ? handleLocalSubmit : undefined}
+        >
           <div className="grid gap-2">
             <Label htmlFor="column-title">{t("columnTitleLabel")}</Label>
             <Input

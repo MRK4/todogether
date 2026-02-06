@@ -20,12 +20,13 @@ import {
 } from "@/lib/actions/boards";
 import { updateColumn } from "@/lib/actions/columns";
 import { moveTask } from "@/lib/actions/tasks";
+import { useGuestBoardOrNull } from "@/lib/guest-board-store";
 import { darkenHex } from "@/lib/utils";
 import { ColumnCreateDialog } from "@/components/column-create-dialog";
 import { ColumnEditDialog } from "@/components/column-edit-dialog";
 import { DraggableTaskCard } from "@/components/draggable-task-card";
 import { DroppableColumn } from "@/components/droppable-column";
-import { type Task } from "@/components/task-card";
+import { type Task, type TaskPriority } from "@/components/task-card";
 import { TaskDetailDialog } from "@/components/task-detail-dialog";
 import { TaskCreateDialog } from "@/components/task-create-dialog";
 import { Button } from "@/components/ui/button";
@@ -51,10 +52,12 @@ import { toast } from "sonner";
 type BoardViewProps = {
   boardId: string | null;
   board: BoardWithColumnsAndTasks | null;
+  isGuestMode?: boolean;
 };
 
-export function BoardView({ boardId, board }: BoardViewProps) {
+export function BoardView({ boardId, board, isGuestMode = false }: BoardViewProps) {
   const router = useRouter();
+  const guest = useGuestBoardOrNull();
   const tBoard = useTranslations("Board");
   const tTask = useTranslations("Task");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -93,10 +96,16 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   }, [board?.title]);
 
   async function handleSaveTitle() {
-    if (!boardId || !editTitleValue.trim() || editTitleValue.trim() === board?.title) {
+    if (!editTitleValue.trim() || editTitleValue.trim() === board?.title) {
       setIsEditingTitle(false);
       return;
     }
+    if (isGuestMode && guest) {
+      guest.updateBoardTitle(editTitleValue.trim());
+      setIsEditingTitle(false);
+      return;
+    }
+    if (!boardId) return;
     setIsUpdatingBoard(true);
     const result = await updateBoardTitle(boardId, editTitleValue.trim());
     setIsUpdatingBoard(false);
@@ -108,6 +117,11 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   async function handleSaveColumnTitle(column: ColumnWithTasks) {
     const trimmed = editColumnTitleValue.trim();
     if (!trimmed || trimmed === column.title) {
+      setEditingColumnId(null);
+      return;
+    }
+    if (isGuestMode && guest) {
+      guest.updateColumn(column.id, { title: trimmed });
       setEditingColumnId(null);
       return;
     }
@@ -123,7 +137,12 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   }
 
   async function handleToggleLock() {
-    if (!boardId || board?.locked == null) return;
+    if (board?.locked == null) return;
+    if (isGuestMode && guest) {
+      guest.updateBoardLocked(!board.locked);
+      return;
+    }
+    if (!boardId) return;
     setIsUpdatingBoard(true);
     const result = await updateBoardLocked(boardId, !board.locked);
     setIsUpdatingBoard(false);
@@ -132,6 +151,11 @@ export function BoardView({ boardId, board }: BoardViewProps) {
   }
 
   async function handleDeleteBoard() {
+    if (isGuestMode && guest) {
+      guest.resetBoard();
+      setDeleteBoardConfirmOpen(false);
+      return;
+    }
     if (!boardId) return;
     setIsUpdatingBoard(true);
     const result = await deleteBoard(boardId);
@@ -161,6 +185,10 @@ export function BoardView({ boardId, board }: BoardViewProps) {
       col.tasks.some((t) => t.id === taskId)
     );
     if (!sourceColumn || sourceColumn.id === targetColumnId) return;
+    if (isGuestMode && guest) {
+      guest.moveTask(taskId, targetColumnId);
+      return;
+    }
     const result = await moveTask(taskId, targetColumnId);
     if (result.success) router.refresh();
   }
@@ -391,8 +419,28 @@ export function BoardView({ boardId, board }: BoardViewProps) {
         task={selectedTask}
         open={!!selectedTask}
         onOpenChange={(open) => !open && setSelectedTask(null)}
-        onTaskUpdated={() => router.refresh()}
+        onTaskUpdated={isGuestMode ? undefined : () => router.refresh()}
         isBoardLocked={board?.locked ?? false}
+        onUpdateTaskLocal={
+          isGuestMode && guest
+            ? async (taskId, data) => {
+                guest.updateTask(taskId, {
+                  title: data.title,
+                  description: data.description ?? undefined,
+                  priority: data.priority as TaskPriority,
+                });
+                return { success: true };
+              }
+            : undefined
+        }
+        onDeleteTaskLocal={
+          isGuestMode && guest
+            ? async (taskId) => {
+                guest.deleteTask(taskId);
+                return { success: true };
+              }
+            : undefined
+        }
       />
       {boardId && columnIdForNewTask && (
         <TaskCreateDialog
@@ -407,6 +455,14 @@ export function BoardView({ boardId, board }: BoardViewProps) {
               setIsCreateOpen(true);
             }
           }}
+          onCreateTaskLocal={
+            isGuestMode && guest
+              ? async (data) => {
+                  guest.createTask(columnIdForNewTask!, data);
+                  return { success: true };
+                }
+              : undefined
+          }
         />
       )}
       {boardId ? (
@@ -414,14 +470,30 @@ export function BoardView({ boardId, board }: BoardViewProps) {
           boardId={boardId}
           open={isCreateColumnOpen}
           onOpenChange={setIsCreateColumnOpen}
-          onSuccess={() => router.refresh()}
+          onSuccess={isGuestMode ? undefined : () => router.refresh()}
+          onCreateColumnLocal={
+            isGuestMode && guest
+              ? async (data) => {
+                  guest.createColumn(data.title, data.color);
+                  return { success: true };
+                }
+              : undefined
+          }
         />
       ) : null}
       <ColumnEditDialog
         column={columnToEdit}
         open={!!columnToEdit}
         onOpenChange={(open) => !open && setColumnToEdit(null)}
-        onSuccess={() => router.refresh()}
+        onSuccess={isGuestMode ? undefined : () => router.refresh()}
+        onUpdateColumnLocal={
+          isGuestMode && guest && columnToEdit
+            ? async (columnId, data) => {
+                guest.updateColumn(columnId, { color: data.color });
+                return { success: true };
+              }
+            : undefined
+        }
       />
     </div>
   );

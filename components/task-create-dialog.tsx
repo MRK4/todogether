@@ -18,11 +18,20 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
+export type CreateTaskLocalData = {
+  title: string;
+  description?: string | null;
+  priority: string;
+};
+
 type TaskCreateDialogProps = {
   boardId: string;
   columnId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCreateTaskLocal?: (
+    data: CreateTaskLocalData
+  ) => Promise<{ success: boolean; error?: string }>;
 };
 
 export function TaskCreateDialog({
@@ -30,6 +39,7 @@ export function TaskCreateDialog({
   columnId,
   open,
   onOpenChange,
+  onCreateTaskLocal,
 }: TaskCreateDialogProps) {
   const t = useTranslations("Task");
   const { data: session, status } = useSession();
@@ -74,13 +84,40 @@ export function TaskCreateDialog({
     onOpenChange(false);
   };
 
+  const handleLocalSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!onCreateTaskLocal || !columnId) return;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = (formData.get("title") as string)?.trim() ?? "";
+    const description = (formData.get("description") as string)?.trim() || undefined;
+    const priority = (formData.get("priority") as string) ?? "medium";
+    if (!title) {
+      toast.error(t("titleLabel"));
+      return;
+    }
+    const result = await onCreateTaskLocal({ title, description, priority });
+    if (result.success) {
+      toast.success(t("createSuccess"));
+      onOpenChange(false);
+    } else if (result.error) {
+      toast.error(result.error);
+    }
+  };
+
+  const useLocalSubmit = !!onCreateTaskLocal;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("createTitle")}</DialogTitle>
         </DialogHeader>
-        <form className="grid gap-4 py-2" action={formAction}>
+        <form
+          className="grid gap-4 py-2"
+          action={useLocalSubmit ? undefined : formAction}
+          onSubmit={useLocalSubmit ? handleLocalSubmit : undefined}
+        >
           <div className="grid gap-1">
             <label
               htmlFor="task-title"
