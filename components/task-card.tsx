@@ -129,9 +129,16 @@ export function TaskCard({ task, onClick, onEdit, onDelete }: TaskCardProps) {
       </CardHeader>
       {task.description?.trim() && (
         <CardContent className="py-1">
-          <p className="line-clamp-2 text-xs text-muted-foreground">
-            {task.description}
-          </p>
+          {task.description.trim().startsWith("<") ? (
+            <div
+              className="line-clamp-2 text-muted-foreground prose prose-sm dark:prose-invert max-w-none text-xs [&_p]:my-0 [&_ul]:my-0 [&_ol]:my-0"
+              dangerouslySetInnerHTML={{ __html: task.description.trim() }}
+            />
+          ) : (
+            <p className="line-clamp-2 text-xs text-muted-foreground">
+              {task.description}
+            </p>
+          )}
         </CardContent>
       )}
       <CardFooter className="flex items-center justify-between px-6 pt-1 pb-3">

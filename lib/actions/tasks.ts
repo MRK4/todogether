@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 
 const createTaskSchema = z.object({
   title: z.string().min(1, "Le titre est requis").max(200),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(15000).optional(),
   priority: z.enum(["low", "medium", "high", "critical"]).optional(),
 });
 
@@ -132,7 +132,7 @@ export async function moveTask(
 
 const updateTaskSchema = z.object({
   title: z.string().min(1, "Le titre est requis").max(200),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(15000).optional(),
   priority: z.enum(["low", "medium", "high", "critical"]).optional(),
   assigneeId: z.string().optional(),
 });

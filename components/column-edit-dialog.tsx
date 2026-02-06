@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { updateColumn, type UpdateColumnState } from "@/lib/actions/columns";
 import type { ColumnWithTasks } from "@/lib/boards";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Dialog,
@@ -40,7 +39,6 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
   const { column, open, onOpenChange, onSuccess } = props;
   const t = useTranslations("Board");
   const tTask = useTranslations("Task");
-  const [title, setTitle] = useState("");
   const [selectedColor, setSelectedColor] = useState<string>(PRESET_COLORS[0]!);
 
   const boundUpdateColumn = (prev: UpdateColumnState | null, formData: FormData) =>
@@ -51,7 +49,6 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
 
   useEffect(() => {
     if (open && column) {
-      setTitle(column.title);
       setSelectedColor(column.color ?? PRESET_COLORS[0]!);
       hasHandledSuccessRef.current = false;
     }
@@ -76,22 +73,10 @@ export function ColumnEditDialog(props: ColumnEditDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t("editColumnTitle")}</DialogTitle>
+          <DialogTitle>{t("columnColorLabel")}</DialogTitle>
         </DialogHeader>
         <form className="grid gap-4 py-2" action={formAction}>
-          <div className="grid gap-2">
-            <Label htmlFor="column-edit-title">{t("columnTitleLabel")}</Label>
-            <Input
-              id="column-edit-title"
-              name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t("columnTitleLabel")}
-              required
-              autoFocus
-              disabled={isPending}
-            />
-          </div>
+          <input type="hidden" name="title" value={column.title} />
           <div className="grid gap-2">
             <Label>{t("columnColorLabel")}</Label>
             <div className="flex flex-wrap items-center gap-2">

@@ -13,7 +13,7 @@ import {
 } from "@/lib/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import {
   NativeSelect,
   NativeSelectOption,
@@ -166,7 +166,7 @@ export function TaskDetailDialog({
             <div className="grid gap-1">
               <label
                 htmlFor="task-edit-title"
-                className="text-sm font-medium leading-none"
+                className="font-mono text-sm font-medium leading-none"
               >
                 {t("titleLabel")}
               </label>
@@ -179,7 +179,7 @@ export function TaskDetailDialog({
               />
             </div>
             <div className="grid gap-1">
-              <span className="text-sm font-medium leading-none">
+              <span className="font-mono text-sm font-medium leading-none">
                 {t("priority")}
               </span>
               <div className="flex flex-wrap gap-2">
@@ -237,7 +237,7 @@ export function TaskDetailDialog({
             <div className="grid gap-1">
               <label
                 htmlFor="task-edit-assignee"
-                className="text-sm font-medium leading-none"
+                className="font-mono text-sm font-medium leading-none"
               >
                 {t("assignee")}
               </label>
@@ -261,16 +261,18 @@ export function TaskDetailDialog({
             <div className="grid gap-1">
               <label
                 htmlFor="task-edit-description"
-                className="text-sm font-medium leading-none"
+                className="font-mono text-sm font-medium leading-none"
               >
                 {t("description")}
               </label>
-              <Textarea
+              <RichTextEditor
+                key={task.id}
                 id="task-edit-description"
                 name="description"
-                rows={4}
+                placeholder={t("description")}
                 defaultValue={task.description?.trim() || ""}
                 disabled={isPending}
+                minHeight="6rem"
               />
             </div>
             {state && !state.success && (
@@ -300,9 +302,24 @@ export function TaskDetailDialog({
                   <span className="text-muted-foreground font-medium font-mono">
                     {t("description")}
                   </span>
-                  <p className="whitespace-pre-wrap text-sm">
-                    {task.description?.trim() || t("noDescription")}
-                  </p>
+                  {task.description?.trim() ? (
+                    task.description.trim().startsWith("<") ? (
+                      <div
+                        className="prose prose-sm dark:prose-invert max-w-none text-sm [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1"
+                        dangerouslySetInnerHTML={{
+                          __html: task.description.trim(),
+                        }}
+                      />
+                    ) : (
+                      <p className="whitespace-pre-wrap text-sm">
+                        {task.description}
+                      </p>
+                    )
+                  ) : (
+                    <p className="text-muted-foreground text-sm">
+                      {t("noDescription")}
+                    </p>
+                  )}
                 </div>
               </div>
               <dl className="grid shrink-0 gap-3 text-sm sm:min-w-[180px]">

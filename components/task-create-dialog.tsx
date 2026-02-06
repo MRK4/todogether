@@ -8,7 +8,7 @@ import type { TaskPriority } from "@/components/task-card";
 import { createTask, type CreateTaskState } from "@/lib/actions/tasks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import {
   Dialog,
   DialogContent,
@@ -84,7 +84,7 @@ export function TaskCreateDialog({
           <div className="grid gap-1">
             <label
               htmlFor="task-title"
-              className="text-sm font-medium leading-none"
+              className="font-mono text-sm font-medium leading-none"
             >
               {t("titleLabel")}
             </label>
@@ -99,7 +99,7 @@ export function TaskCreateDialog({
           <div className="grid gap-1">
             <label
               htmlFor="task-assignee"
-              className="text-sm font-medium leading-none"
+              className="font-mono text-sm font-medium leading-none"
             >
               {t("assignee")}
             </label>
@@ -112,7 +112,7 @@ export function TaskCreateDialog({
           </div>
 
           <div className="grid gap-1">
-            <span className="text-sm font-medium leading-none">
+            <span className="font-mono text-sm font-medium leading-none">
               {t("priority")}
             </span>
             <div className="flex flex-wrap gap-2">
@@ -171,15 +171,16 @@ export function TaskCreateDialog({
           <div className="grid gap-1">
             <label
               htmlFor="task-description"
-              className="text-sm font-medium leading-none"
+              className="font-mono text-sm font-medium leading-none"
             >
               {t("description")}
             </label>
-            <Textarea
+            <RichTextEditor
               id="task-description"
               name="description"
-              rows={4}
+              placeholder={t("description")}
               disabled={isPending}
+              minHeight="6rem"
             />
           </div>
 

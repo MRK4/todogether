@@ -115,9 +115,19 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Placeholder éditeur WYSIWYG (Tiptap) */
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 /* Hovers harmonisés à la couleur de la colonne (variables définies sur la Card) */
-.column-colored button:hover,
-.column-colored [data-slot="button"]:hover {
+/* Le bouton titre (.column-title-button) garde le même hover que le header (muted) */
+.column-colored button:not(.column-title-button):hover,
+.column-colored [data-slot="button"]:not(.column-title-button):hover {
   background-color: var(--column-hover) !important;
 }
 .column-colored button.border-dashed:hover {

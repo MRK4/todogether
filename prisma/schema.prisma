@@ -103,7 +103,7 @@ model Column {
 model Task {
   id          String   @id @default(cuid())
   title       String
-  description String?
+  description String?  @db.Text
   order       Int
   /// Priorité : low, medium, high, critical
   priority String? @default("medium")
