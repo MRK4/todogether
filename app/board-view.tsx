@@ -312,20 +312,20 @@ export function BoardView({ boardId, board }: BoardViewProps) {
                     <button
                       type="button"
                       onClick={() =>
-                        !board.locked &&
+                        !board?.locked &&
                         (setEditingColumnId(column.id), setEditColumnTitleValue(column.title))
                       }
-                      disabled={board.locked}
+                      disabled={board?.locked}
                       className="column-title-button text-foreground hover:bg-muted/80 group -mx-1 flex w-fit min-w-0 cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-left font-medium transition-colors disabled:cursor-default disabled:opacity-100 disabled:hover:bg-transparent"
                     >
                       <span className="truncate">{column.title}</span>
-                      {!board.locked && (
+                      {!board?.locked && (
                         <Pencil className="size-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
                       )}
                     </button>
                   )}
                 </CardTitle>
-                {!board.locked && (
+                {!board?.locked && (
                   <Button
                     size="icon-xs"
                     variant="ghost"
@@ -348,14 +348,14 @@ export function BoardView({ boardId, board }: BoardViewProps) {
                             key={task.id}
                             task={task}
                             onClick={setSelectedTask}
-                            disabled={board.locked}
+                            disabled={board?.locked}
                           />
                         ))}
                       </div>
                     ) : null
                   }
                   addTaskButton={
-                    board.locked ? null : (
+                    board?.locked ? null : (
                       <button
                         type="button"
                         className="cursor-pointer border-dashed text-muted-foreground hover:bg-muted/60 flex items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm transition-colors"
@@ -374,7 +374,7 @@ export function BoardView({ boardId, board }: BoardViewProps) {
             </Card>
           ))}
 
-          {boardId && !board.locked ? (
+          {boardId && !board?.locked ? (
             <button
               type="button"
               className="border-dashed bg-muted/40 text-muted-foreground hover:bg-muted/60 flex min-h-[280px] min-w-[260px] max-w-xs flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border transition-colors"
